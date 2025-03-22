@@ -2,8 +2,8 @@ import React from 'react';
 
 const Nav = () => {
   return (
-    <nav className="bg-gradient-to-r text-violet-500 shadow-lg">
-      <div className="container mx-0 px-6 py-4 flex justify-between items-center">
+    <nav className="bg-gradient-to-r text-violet-600 shadow-lg">
+      <div className="container mx-0 px-6 py-3 flex justify-between items-center">
         {/* Logo or Brand Name */}
         <div className="flex items-center space-x-4">
           {/* Uncomment if you want to add a logo */}
@@ -14,16 +14,16 @@ const Nav = () => {
         {/* Navigation Links */}
         <ul className="hidden md:flex items-center space-x-8 font-medium">
           <li>
-            <a href="/" className="hover:text-gray-200 transition">Home</a>
+            <a href="/" className="hover:text-gray-600 transition">Home</a>
           </li>
           <li>
-            <a href="/appointment" className="hover:text-gray-200 transition">Appointment</a>
+            <a href="/appointment" className="hover:text-gray-600 transition">Appointment</a>
           </li>
           <li>
-            <a href="/services" className="hover:text-gray-200 transition">Services</a>
+            <a href="/services" className="hover:text-gray-600 transition">Services</a>
           </li>
           <li>
-            <a href="/about" className="hover:text-gray-200 transition">About</a>
+            <a href="/about" className="hover:text-gray-600 transition">About</a>
           </li>
         </ul>
 
