@@ -1,15 +1,12 @@
 import React from 'react'
-import Nav from '../components/nav'
 import Banner from '../components/banner'
-const Home = () => {
-return (
-<>
-    <Nav/>
-    <Banner/>
 
-</>
 
-)
+const home = () => {
+  return (
+    <div>
+      <Banner/>
+    </div>
+  )
 }
-
-export default Home
+export default home

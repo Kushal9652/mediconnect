@@ -1,15 +1,25 @@
-
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import './App.css';
-import Login from './screens/login';
+import Nav from './components/nav';
 import Signup from './screens/signup';
+import Login from './screens/login';
 import Home from './screens/home';
+import Services from './screens/services';
+import About from './screens/about';
 
 function App() {
   return (
-      // <Login/>
-      // <Signup/>
-      <Home/>
+    <>
+      <Nav />
+      <Routes>
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Home/>} />
+        <Route path="/services" element={<Services/>} />
+        <Route path="/about" element={<About/>} />
+      </Routes>
+    </>
   );
 }
 

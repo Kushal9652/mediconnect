@@ -1,7 +1,7 @@
 import React from 'react'
 import '../index.css';
 
-const login = () => {
+const Login = () => {
 return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
         <div className="bg-white p-8 rounded-lg shadow-lg w-96">
@@ -35,4 +35,4 @@ return (
 )
 }
 
-export default login
+export default Login
