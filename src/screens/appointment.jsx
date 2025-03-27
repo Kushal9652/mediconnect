@@ -44,16 +44,16 @@ const Appointment = () => {
 
     return (
       <div className="bg-lightgray min-h-screen flex flex-col">
-      <div className="flex-grow flex flex-col items-center justify-center">
-      <div className="bg-white shadow-2xl rounded-lg p-8 w-full max-w-lg mb-10 mt-10">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Book an Appointment</h1>
+      <div className="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="bg-white shadow-2xl rounded-lg p-6 sm:p-8 w-full max-w-md sm:max-w-lg lg:max-w-xl mb-10 mt-10">
+      <h1 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-4 sm:mb-6">Book an Appointment</h1>
       <form onSubmit={handleFormSubmit}>
-        <div className="mb-6">
+        <div className="mb-4 sm:mb-6">
         <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="name">
         Name
         </label>
         <input
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
         id="name"
         type="text"
         placeholder="Enter your name"
@@ -62,12 +62,12 @@ const Appointment = () => {
         />
         {formErrors.name && <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>}
         </div>
-        <div className="mb-6">
+        <div className="mb-4 sm:mb-6">
         <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="email">
         Email
         </label>
         <input
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
         id="email"
         type="email"
         placeholder="Enter your email"
@@ -76,12 +76,12 @@ const Appointment = () => {
         />
         {formErrors.email && <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>}
         </div>
-        <div className="mb-6">
+        <div className="mb-4 sm:mb-6">
         <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="date">
         Date
         </label>
         <input
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
         id="date"
         type="date"
         value={formData.date}
@@ -89,12 +89,12 @@ const Appointment = () => {
         />
         {formErrors.date && <p className="text-red-500 text-sm mt-1">{formErrors.date}</p>}
         </div>
-        <div className="mb-6">
+        <div className="mb-4 sm:mb-6">
         <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="time">
         Time
         </label>
         <input
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
         id="time"
         type="time"
         value={formData.time}
@@ -104,7 +104,7 @@ const Appointment = () => {
         </div>
         <div className="flex justify-center">
         <button
-        className="bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold py-2 px-6 rounded-lg shadow-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500"
+        className="bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold py-2 px-4 sm:py-2 sm:px-6 rounded-lg shadow-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500"
         type="submit"
         >
         Book Appointment
@@ -117,10 +117,10 @@ const Appointment = () => {
       {isModalOpen && (
       <Modal onClose={closeModal}>
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-4">Appointment Scheduled</h2>
-        <p className="text-gray-700 mb-6">Your appointment is scheduled. Please wait for the respective doctor to take your call.</p>
+        <h2 className="text-xl sm:text-2xl font-bold mb-4">Appointment Scheduled</h2>
+        <p className="text-gray-700 mb-4 sm:mb-6">Your appointment is scheduled. Please wait for the respective doctor to take your call.</p>
         <button
-        className="bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold py-2 px-6 rounded-lg shadow-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500"
+        className="bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold py-2 px-4 sm:py-2 sm:px-6 rounded-lg shadow-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500"
         onClick={() => {
         alert('Loading...');
         closeModal();
