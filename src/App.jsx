@@ -7,6 +7,7 @@ import Login from './screens/login';
 import Home from './screens/home';
 import Services from './screens/services';
 import About from './screens/about';
+import Appointment from './screens/appointment';
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
         <Route path="/" element={<Home/>} />
         <Route path="/services" element={<Services/>} />
         <Route path="/about" element={<About/>} />
+        <Route path="/appointment" element={<Appointment/>} />
+        <Route path="*" element={<h1 className="text-2xl text-center mb-8 mt-5">404 Not Found</h1>} />
+
       </Routes>
     </>
   );
