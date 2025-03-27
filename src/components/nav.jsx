@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Nav = () => {
   return (
-    <nav className="bg-white text-violet-600 shadow-lg">
+    <nav className="bg-white text-violet-600 shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4 py-2 flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <span className="text-2xl font-bold tracking-wide">MediConnect</span>

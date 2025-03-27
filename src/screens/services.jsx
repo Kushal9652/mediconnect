@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Footer from '../components/footer';
 const Services = () => {
 return (
     <div className="animate-fadeIn ml-12">
@@ -21,6 +21,7 @@ return (
                 </div>
             ))}
         </div>
+        <Footer/>
     </div>
 );
 };
