@@ -9,8 +9,8 @@ const Footer = () => {
                 <h2 className="text-3xl font-bold mb-6">MediConnect</h2>
                 <p className="text-center mb-4">Connecting you to the best healthcare services.</p>
                 <div className="flex space-x-4 mb-4">
-                <a href="#" className="text-violet-600 hover:text-violet-400">Privacy Policy</a>
-                <a href="#" className="text-violet-600 hover:text-violet-400">Terms of Service</a>
+                <a href="/privacy-policy" className="text-violet-600 hover:text-violet-400">Privacy Policy</a>
+                <a href="/terms-of-service" className="text-violet-600 hover:text-violet-400">Terms of Service</a>
                 </div>
                 <p>&copy; 2023 MediConnect. All rights reserved.</p>
             </div>
