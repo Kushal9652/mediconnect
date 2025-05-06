@@ -73,7 +73,7 @@ const Nav = () => {
           <li className="md:hidden border-b">
             <Link
               to="/signup"
-              className="inline-block px-4 py-2 bg-violet-100 text-violet-600 rounded-md shadow hover:bg-violet-200 transition"
+              className="inline-block px-2 py-1 text-sm bg-violet-100 text-violet-600 rounded-md shadow hover:bg-violet-200 transition"
               onClick={() => setIsMenuOpen(false)}
             >
               Sign Up
@@ -82,7 +82,7 @@ const Nav = () => {
           <li className="md:hidden">
             <Link
               to="/login"
-              className="inline-block px-4 py-2 bg-violet-600 text-white rounded-md shadow hover:bg-violet-500 transition"
+              className="inline-block px-3 py-1 bg-violet-600 text-white rounded-md shadow hover:bg-violet-500 transition"
               onClick={() => setIsMenuOpen(false)}
             >
               Log In
