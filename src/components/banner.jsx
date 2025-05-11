@@ -5,7 +5,7 @@ const Banner = () => {
     const navigate = useNavigate();
 
     const handleAppointmentClick = () => {
-        navigate('/appointment'); // Replace '/appointments' with the actual route for your appointments page
+        navigate('/appointment'); // Navigate to the appointments page
     };
 
     return (
