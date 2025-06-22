@@ -80,6 +80,24 @@ const Nav = () => {
           </li>
           <li className="border-b md:border-none">
             <Link
+              to="/medicines"
+              className="block px-4 py-2 hover:text-violet-400 transition"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Medicines
+            </Link>
+          </li>
+          <li className="border-b md:border-none">
+            <Link
+              to="/lab-test"
+              className="block px-4 py-2 hover:text-violet-400 transition"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Lab Test
+            </Link>
+          </li>
+          <li className="border-b md:border-none">
+            <Link
               to="/about"
               className="block px-4 py-2 hover:text-violet-400 transition"
               onClick={() => setIsMenuOpen(false)}
