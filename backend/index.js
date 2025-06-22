@@ -12,7 +12,7 @@ app.use(express.json());
 
 const port = process.env.PORT || 3000;
 
-app.use('/api/users', userRoutes);
+app.use('/api/auth', userRoutes);
 
 connectDB(process.env.MONGODB_URI)
   .then(() => console.log('mongodb connected'))
