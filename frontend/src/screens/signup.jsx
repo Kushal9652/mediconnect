@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../config/apiConfig';
 
 const Signup = () => {
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [form, setForm] = useState({ username: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -20,6 +20,7 @@ const Signup = () => {
     try {
       const res = await axios.post(`${API_BASE_URL}/api/auth/register`, form);
       localStorage.setItem('token', res.data.token);
+      window.dispatchEvent(new Event('storage'));
       navigate('/profile');
     } catch (err) {
       setError(err.response?.data?.message || 'Signup failed');
@@ -35,8 +36,8 @@ const Signup = () => {
         {error && <div className="mb-4 text-red-500 text-center">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
-            <label htmlFor="name" className="text-gray-700 font-medium block mb-2">Name</label>
-            <input type="text" id="name" name="name" value={form.name} onChange={handleChange} required className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <label htmlFor="username" className="text-gray-700 font-medium block mb-2">Username</label>
+            <input type="text" id="username" name="username" value={form.username} onChange={handleChange} required className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
           <div className="mb-6">
             <label htmlFor="email" className="text-gray-700 font-medium block mb-2">Email:</label>
