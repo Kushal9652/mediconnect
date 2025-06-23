@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Footer from '../components/footer';
 
 const tests = [
@@ -31,6 +31,14 @@ const tests = [
 const LabTest = () => {
   const [booked, setBooked] = useState([false, false, false, false]);
 
+  // Add to cart handler
+  const handleAddToCart = useCallback((test) => {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    cart.push({ type: 'labtest', ...test });
+    localStorage.setItem('cart', JSON.stringify(cart));
+    window.dispatchEvent(new Event('storage'));
+  }, []);
+
   const handleBook = (idx) => {
     const updated = [...booked];
     updated[idx] = true;
@@ -48,13 +56,21 @@ const LabTest = () => {
               <h2 className="text-xl font-semibold text-violet-700 mb-2">{test.name}</h2>
               <p className="text-gray-600 mb-4 text-center">{test.description}</p>
               <div className="text-lg font-bold text-violet-600 mb-4">{test.price}</div>
-              <button
-                className={`w-full py-2 px-4 rounded-lg font-semibold shadow-md transition ${booked[idx] ? 'bg-green-400 text-white cursor-not-allowed' : 'bg-violet-600 text-white hover:bg-violet-700'}`}
-                onClick={() => handleBook(idx)}
-                disabled={booked[idx]}
-              >
-                {booked[idx] ? 'Booked!' : 'Book Test'}
-              </button>
+              <div className="flex gap-2 w-full">
+                <button
+                  className={`flex-1 py-2 px-4 rounded-lg font-semibold shadow-md transition ${booked[idx] ? 'bg-green-400 text-white cursor-not-allowed' : 'bg-violet-600 text-white hover:bg-violet-700'}`}
+                  onClick={() => handleBook(idx)}
+                  disabled={booked[idx]}
+                >
+                  {booked[idx] ? 'Booked!' : 'Book Test'}
+                </button>
+                <button
+                  className="flex-1 py-2 px-4 rounded-lg font-semibold shadow-md transition bg-violet-100 text-violet-700 hover:bg-violet-200"
+                  onClick={() => handleAddToCart(test)}
+                >
+                  Add to Cart
+                </button>
+              </div>
             </div>
           ))}
         </div>

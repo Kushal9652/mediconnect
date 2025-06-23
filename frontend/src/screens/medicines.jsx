@@ -1,3 +1,5 @@
+import Footer from '../components/footer';
+import React, { useCallback } from 'react';
 
 const medicinesList = [
     { name: "Paracetamol", description: "Pain reliever and fever reducer." },
@@ -33,6 +35,13 @@ const medicinesList = [
 ];
 
 const Medicines = () => {
+    // Add to cart handler
+    const handleAddToCart = useCallback((medicine) => {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        cart.push({ type: 'medicine', ...medicine });
+        localStorage.setItem('cart', JSON.stringify(cart));
+        window.dispatchEvent(new Event('storage'));
+    }, []);
     return (
         <div>
             <div className="animate-fadeIn ml-4 md:ml-12 max-w-screen overflow-x-hidden flex flex-col items-center">
@@ -44,11 +53,18 @@ const Medicines = () => {
                             className="bg-white shadow-md rounded-lg p-4 flex flex-col items-start hover:shadow-lg transition-shadow"
                         >
                             <div className="font-semibold text-lg mb-2">{medicine.name}</div>
-                            <div className="text-gray-600 text-sm">{medicine.description}</div>
+                            <div className="text-gray-600 text-sm mb-2">{medicine.description}</div>
+                            <button
+                                className="mt-auto bg-violet-600 text-white px-3 py-1 rounded hover:bg-violet-700 transition"
+                                onClick={() => handleAddToCart(medicine)}
+                            >
+                                Add to Cart
+                            </button>
                         </div>
                     ))}
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };
