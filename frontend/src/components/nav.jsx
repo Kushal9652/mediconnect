@@ -1,25 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useCart } from './CartContext';
 
 const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
+  const [cartPop, setCartPop] = useState(false);
   const navigate = useNavigate();
+  const { getTotalItems } = useCart();
 
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem('token'));
     // Listen for storage changes (e.g., logout in another tab)
     const handleStorage = () => {
       setIsLoggedIn(!!localStorage.getItem('token'));
-      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-      setCartCount(cart.length);
     };
     window.addEventListener('storage', handleStorage);
-    // Initial cart count
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    setCartCount(cart.length);
     return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
+  useEffect(() => {
+    const handleCartPop = () => {
+      setCartPop(true);
+      setTimeout(() => setCartPop(false), 600);
+    };
+    window.addEventListener('cart-pop', handleCartPop);
+    return () => window.removeEventListener('cart-pop', handleCartPop);
   }, []);
 
   const handleLogout = () => {
@@ -149,11 +155,11 @@ const Nav = () => {
             </>
           )}
           <Link to="/cart" className="relative group ml-2">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 text-violet-600 group-hover:text-violet-800 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-7 h-7 text-violet-600 group-hover:text-violet-800 transition ${cartPop ? 'animate-bounce' : ''}`}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386a2.25 2.25 0 012.12 1.575l.347 1.04M6.75 7.5h10.5m0 0l1.049 3.146a2.25 2.25 0 01-2.12 2.854H8.82a2.25 2.25 0 01-2.12-1.575L4.5 4.5m2.25 3h10.5m-6.75 9.75a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm7.5 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
             </svg>
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-violet-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[1.2rem] text-center">{cartCount}</span>
+            {getTotalItems() > 0 && (
+              <span className="absolute -top-2 -right-2 bg-violet-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[1.2rem] text-center">{getTotalItems()}</span>
             )}
           </Link>
         </div>

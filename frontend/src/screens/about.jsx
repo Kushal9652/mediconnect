@@ -1,155 +1,235 @@
-import React, { useState } from 'react';
-import Doctors from '../components/doctors';
-import Footer from '../components/footer';
-import ExpandedService from '../components/ExpandedService';
+import { Link } from "react-router-dom";
+import { 
+  Stethoscope, 
+  Pill, 
+  Microscope, 
+  Users, 
+  Award, 
+  Clock, 
+  Shield, 
+  Heart,
+  CheckCircle,
+  Globe,
+  Star
+} from "lucide-react";
+import Footer from "../components/footer.jsx";
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const About = () => {
-    const [expandedService, setExpandedService] = useState(null);
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true, offset: 80 });
+  }, []);
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      {/* Fade-in animation for the whole page */}
+      <div className="animate-fade-in">
+        {/* Hero Section */}
+        <section className="py-20" data-aos="fade-down">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <span className="inline-block mb-4 px-3 py-1 rounded-full bg-blue-100 text-blue-800 font-semibold" data-aos="zoom-in">About MediConnect</span>
+              <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6" data-aos="fade-up">
+                Revolutionizing
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 animate-gradient-x"> Healthcare Access</span>
+              </h1>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="200">
+                We're on a mission to make quality healthcare accessible, affordable, and convenient for everyone, 
+                bridging the gap between patients and healthcare providers through innovative technology.
+              </p>
+            </div>
+          </div>
+        </section>
 
-    const services = [
-        { 
-            title: "Consultation", 
-            description: "Consultation with our doctors is available 24/7. You can consult with our doctors anytime, anywhere.", 
-            details: "Our consultation services connect you with experienced doctors who provide personalized advice and treatment plans. Whether it's a routine check-up or a specific health concern, our doctors are here to help. We also offer video consultations for your convenience, ensuring you receive expert care from the comfort of your home. Our platform allows you to schedule appointments easily, access your medical history, and receive follow-up care seamlessly. With a focus on patient satisfaction, we aim to make healthcare accessible and stress-free for everyone. Additionally, our doctors specialize in a wide range of fields, including general medicine, pediatrics, gynecology, dermatology, and more. This ensures that you receive expert advice tailored to your specific needs. Our 24/7 availability means you can get help whenever you need it, even during emergencies. We prioritize your privacy and security, ensuring that all consultations are confidential and conducted in a secure environment.", 
-            bgColor: "bg-white" 
-        },
-        { 
-            title: "Medicine Delivery", 
-            description: "Get your medicines delivered to your doorstep. We provide medicine delivery services.", 
-            details: "We ensure timely delivery of medicines to your home, saving you time and effort. Our service is reliable and ensures that you never miss your medication. With our easy-to-use platform, you can upload prescriptions, track orders, and receive reminders for refills. We partner with trusted pharmacies to ensure the authenticity and quality of medicines. Our delivery network is designed to be fast and efficient, even in remote areas. Whether it's a one-time order or a recurring prescription, we make sure your health needs are met without any hassle. Our platform also offers discounts and special offers on bulk orders, making healthcare more affordable. You can set up automatic refills for chronic conditions, ensuring you never run out of essential medications. We also provide a dedicated customer support team to assist you with any queries or issues related to your orders. Our goal is to make medicine delivery seamless, affordable, and accessible for everyone.", 
-            bgColor: "bg-white" 
-        },
-        { 
-            title: "Lab Tests", 
-            description: "Book lab tests online and get tested at home. We provide home lab testing services.", 
-            details: "Our lab test services offer accurate and reliable results from the comfort of your home. We partner with certified labs to ensure quality and precision. From blood tests to specialized diagnostics, we cover a wide range of tests with quick and secure reporting. Our trained professionals ensure safe and hygienic sample collection at your convenience. You can track your test status online and access detailed reports through our platform. With a focus on accuracy and speed, we aim to make diagnostic testing stress-free and accessible for everyone. Our services include a wide range of tests such as blood sugar, cholesterol, thyroid, vitamin levels, and more. We also offer advanced diagnostic tests like MRI, CT scans, and genetic testing. Our team ensures that all samples are handled with the utmost care and transported under strict temperature-controlled conditions. Additionally, we provide expert consultations to help you understand your test results and take the next steps in your healthcare journey.", 
-            bgColor: "bg-white" 
-        },
-        { 
-            title: "Insurance", 
-            description: "Get health insurance for you and your family. We provide health insurance services.", 
-            details: "We offer comprehensive health insurance plans to safeguard your family's health and finances. Choose from a variety of plans tailored to your needs. Our team assists you in understanding policies, filing claims, and ensuring a hassle-free experience. We work with leading insurance providers to offer you the best coverage options. Whether it's hospitalization, outpatient care, or preventive health check-ups, our plans are designed to cover all aspects of your healthcare journey. With 24/7 support, we ensure that you are never alone in navigating the complexities of health insurance. Our plans include coverage for critical illnesses, maternity care, and even alternative treatments like Ayurveda and homeopathy. We also provide cashless hospitalization services at a wide network of hospitals. Our dedicated claims team ensures that your claims are processed quickly and efficiently. Additionally, we offer wellness programs and preventive care packages to help you stay healthy and reduce healthcare costs in the long run.", 
-            bgColor: "bg-white" 
-        },
-        { 
-            title: "Emergency", 
-            description: "Get emergency services at your doorstep. We provide emergency services.", 
-            details: "Our emergency services are designed to provide immediate assistance during critical situations. We are just a call away to help you in emergencies. From ambulance services to urgent medical care, we ensure prompt and reliable support when you need it the most. Our team is trained to handle a wide range of emergencies, including accidents, cardiac issues, and trauma care. With advanced equipment and a network of specialists, we prioritize saving lives and minimizing complications. Our goal is to provide rapid response and compassionate care during the most challenging times. Our ambulances are equipped with state-of-the-art life-saving equipment and staffed by trained paramedics. We also provide telemedicine support to guide you through the initial steps of care while help is on the way. Our emergency hotline is available 24/7, ensuring that you can reach us at any time. Additionally, we offer post-emergency follow-up care to help you recover and regain your health.", 
-            bgColor: "bg-white" 
-        },
-        {
-            title: "Mental Health Support",
-            description: "Access mental health professionals for counseling and therapy, anytime you need support.",
-            details: "Our mental health support services connect you with licensed therapists and counselors for confidential sessions. Whether you're dealing with stress, anxiety, depression, or just need someone to talk to, our professionals are here to help. We offer both online and in-person sessions, flexible scheduling, and resources for self-care and wellness. Your mental well-being is our priority, and we strive to create a safe, supportive environment for all.",
-            bgColor: "bg-white"
-        }
-    ];
-
-    const toggleService = (index) => {
-        setExpandedService(expandedService === index ? null : index);
-    };
-
-    return (
-        <div className="w-full min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-100 flex flex-col overflow-x-hidden">
-            {/* Header Section */}
-            <section className="w-full flex flex-col md:flex-row items-center justify-center gap-10 px-6 md:px-16 py-16 bg-gradient-to-r from-violet-100 via-white to-blue-100 shadow-md rounded-b-3xl mb-14 relative overflow-hidden">
-                {/* Animated background shapes */}
-                <div className="absolute top-0 left-0 w-72 h-72 bg-violet-200 rounded-full opacity-30 blur-2xl animate-pulse -z-10" style={{animationDuration: '6s'}}></div>
-                <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-200 rounded-full opacity-20 blur-2xl animate-pulse -z-10" style={{animationDuration: '8s'}}></div>
-                <div className="flex-1 flex flex-col items-center md:items-end mb-8 md:mb-0">
-                    <h2 className="text-5xl md:text-6xl font-extrabold text-violet-800 mb-6 drop-shadow-lg animate-fadeInDown text-center md:text-right transition-all duration-700" style={{animationDelay: '0.1s', animationFillMode: 'both'}}>
-                        About <span className="text-violet-500">MediConnect</span>
-                    </h2>
-                    <p className="text-lg md:text-xl text-gray-700 mb-4 max-w-xl animate-fadeInUp text-center md:text-right transition-all duration-700" style={{animationDelay: '0.3s', animationFillMode: 'both'}}>
-                        <span className="font-bold text-violet-600">MediConnect</span> is reimagining healthcare for the digital age. We empower patients and providers to connect, communicate, and collaborate effortlessly—anytime, anywhere.
-                    </p>
-                    <p className="text-lg md:text-xl text-gray-700 max-w-xl animate-fadeInUp text-center md:text-right transition-all duration-700" style={{animationDelay: '0.5s', animationFillMode: 'both'}}>
-                        Our platform blends cutting-edge technology with a human touch, making access to quality care simple, secure.
-                    </p>
+        {/* Mission & Vision */}
+        <section className="py-16 bg-white/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div data-aos="fade-right">
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h2>
+                <p className="text-gray-600 text-lg leading-relaxed mb-6">
+                  To democratize healthcare by providing seamless access to medical consultations, 
+                  prescription medicines, and diagnostic services through our comprehensive digital platform.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-start" data-aos="fade-left" data-aos-delay="100">
+                    <CheckCircle className="h-6 w-6 text-blue-500 mr-3 mt-1 flex-shrink-0 animate-bounce" />
+                    <p className="text-gray-700">24/7 access to certified healthcare professionals</p>
+                  </div>
+                  <div className="flex items-start" data-aos="fade-left" data-aos-delay="200">
+                    <CheckCircle className="h-6 w-6 text-blue-500 mr-3 mt-1 flex-shrink-0 animate-bounce" />
+                    <p className="text-gray-700">Secure and confidential medical consultations</p>
+                  </div>
+                  <div className="flex items-start" data-aos="fade-left" data-aos-delay="300">
+                    <CheckCircle className="h-6 w-6 text-blue-500 mr-3 mt-1 flex-shrink-0 animate-bounce" />
+                    <p className="text-gray-700">Fast and reliable medicine delivery nationwide</p>
+                  </div>
                 </div>
-                <div className="flex-1 flex justify-center items-center">
-                    <div className="bg-white/80 rounded-3xl shadow-xl p-4 transition-transform duration-700 hover:scale-105 w-64 md:w-80 lg:w-96 flex items-center justify-center animate-fadeInUp" style={{animationDelay: '0.7s', animationFillMode: 'both'}}>
-                        <img
-                            src="/image.png"
-                            alt="MediConnect Logo"
-                            className="w-full h-40 md:h-56 object-contain rounded-2xl shadow-md transition-transform duration-700 hover:scale-110 hover:shadow-2xl"
-                            style={{transitionTimingFunction: 'cubic-bezier(.4,2,.6,1)'}}
-                        />
-                    </div>
+              </div>
+              <div className="relative" data-aos="zoom-in-up" data-aos-delay="200">
+                <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl p-8 text-white shadow-2xl transform transition-transform duration-700 hover:scale-105 hover:shadow-3xl animate-pulse">
+                  <Heart className="h-12 w-12 mb-4 animate-spin-slow" />
+                  <h3 className="text-2xl font-bold mb-4">Our Vision</h3>
+                  <p className="text-blue-50 leading-relaxed">
+                    To become the most trusted healthcare companion, empowering millions to take control 
+                    of their health journey with confidence and convenience.
+                  </p>
                 </div>
-            </section>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            {/* Services Section */}
-            <section className="w-full px-2 md:px-8 lg:px-16 mb-16 animate-fadeIn" style={{animationDelay: '0.9s', animationFillMode: 'both'}}>
-                <h1 className="text-xl md:text-2xl text-center mb-6 mt-4 md:mb-8 md:mt-5">Services</h1>
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 justify-center">
-                    {services.map((service, index) => (
-                        <div
-                            key={index}
-                            className={`relative w-full md:w-[32rem] h-56 md:h-80 ${service.bgColor} shadow-md rounded-2xl flex flex-col justify-center items-center transform transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-xl hover:bg-violet-50 m-2 md:m-4 animate-fadeInUp`}
-                            style={{ animationDelay: `${0.1 + index * 0.1}s`, animationFillMode: 'both' }}
-                            onClick={() => toggleService(index)}
-                        >
-                            <h2 className="text-lg md:text-xl font-semibold mb-1 md:mb-2 text-violet-700 transition-colors duration-300 group-hover:text-violet-900">{service.title}</h2>
-                            <p className="text-center text-xs md:text-sm text-black transition-colors duration-300 group-hover:text-violet-800">{service.description}</p>
-                        </div>
-                    ))}
-                </div>
-                {expandedService !== null && (
-                    <ExpandedService
-                        service={services[expandedService]}
-                        onClose={() => setExpandedService(null)}
-                    />
-                )}
-            </section>
+        {/* Services Deep Dive */}
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4" data-aos="fade-up">Comprehensive Healthcare Solutions</h2>
+              <p className="text-gray-600 text-lg max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="150">
+                From consultation to recovery, we provide end-to-end healthcare services tailored to your needs
+              </p>
+            </div>
 
-            {/* Values & Vision Section */}
-            <section className="w-full flex flex-col md:flex-row gap-8 px-6 md:px-16 mb-16">
-                <div className="flex-1 bg-white/90 rounded-2xl shadow-lg p-8 flex flex-col items-center animate-fadeInLeft transform transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:bg-violet-50/80 hover:border-violet-200 border-2 border-transparent cursor-pointer group" style={{animationDelay: '0.2s', animationFillMode: 'both'}}>
-                    <h3 className="text-3xl md:text-4xl text-violet-700 font-semibold mb-6 transition-colors duration-300 group-hover:text-violet-900">Our Values</h3>
-                    <ul className="list-disc list-inside text-gray-800 space-y-4 text-left w-full max-w-md">
-                        <li className="transition-all duration-300 group-hover:pl-2"> <strong>Compassionate Care:</strong> We prioritize empathy and understanding in every interaction.</li>
-                        <li className="transition-all duration-300 group-hover:pl-2"> <strong>Innovation:</strong> Harnessing the latest technology to improve healthcare delivery.</li>
-                        <li className="transition-all duration-300 group-hover:pl-2"> <strong>Accessibility:</strong> Making healthcare services available to everyone, everywhere.</li>
-                        <li className="transition-all duration-300 group-hover:pl-2"> <strong>Trust and Transparency:</strong> Building relationships based on honesty and reliability.</li>
-                    </ul>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl group cursor-pointer" data-aos="fade-up" data-aos-delay="100">
+                <div className="p-8">
+                  <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 animate-float">
+                    <Stethoscope className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Online Consultations</h3>
+                  <p className="text-gray-700 mb-6 leading-relaxed">
+                    Connect with board-certified doctors through secure video calls, chat, or phone consultations. 
+                    Get expert medical advice from the comfort of your home.
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center" data-aos="fade-right" data-aos-delay="200">
+                      <Star className="h-4 w-4 text-purple-500 mr-2 animate-pulse" />
+                      500+ Certified Doctors
+                    </li>
+                    <li className="flex items-center" data-aos="fade-right" data-aos-delay="250">
+                      <Clock className="h-4 w-4 text-blue-500 mr-2 animate-spin-slow" />
+                      Available 24/7
+                    </li>
+                    <li className="flex items-center" data-aos="fade-right" data-aos-delay="300">
+                      <Shield className="h-4 w-4 text-blue-500 mr-2 animate-bounce" />
+                      HIPAA Compliant
+                    </li>
+                  </ul>
                 </div>
-                <div className="flex-1 bg-white/90 rounded-2xl shadow-lg p-8 flex flex-col items-center animate-fadeInRight transform transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:bg-blue-50/80 hover:border-blue-200 border-2 border-transparent cursor-pointer group" style={{animationDelay: '0.4s', animationFillMode: 'both'}}>
-                    <h3 className="text-3xl md:text-4xl text-violet-700 font-semibold mb-6 transition-colors duration-300 group-hover:text-violet-900">Our Vision</h3>
-                    <p className="text-gray-800 text-lg md:text-xl text-center transition-all duration-300 group-hover:tracking-wide">
-                        To revolutionize the healthcare industry by creating a world where quality healthcare is just a click away. We aim to empower individuals and healthcare providers through technology, fostering a healthier and more connected global community.
-                    </p>
-                </div>
-            </section>
+              </div>
 
-            {/* Team Section */}
-            <section className="w-full flex flex-col md:flex-row items-center justify-center px-6 md:px-16 mb-16 gap-8">
-                <div className="flex-1 flex flex-col items-center md:items-center animate-fadeInLeft text-center" style={{animationDelay: '0.6s', animationFillMode: 'both'}}>
-                    <h3 className="text-3xl md:text-4xl font-semibold text-violet-700 mb-6">Meet Our Team</h3>
-                    <p className="text-gray-700 text-lg md:text-xl max-w-xl mb-4">
-                        Our dedicated team of healthcare professionals and technologists is committed to providing you with the best possible experience. We work together to ensure that MediConnect remains at the forefront of healthcare innovation.
-                    </p>
+              <div className="border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl group cursor-pointer" data-aos="fade-up" data-aos-delay="200">
+                <div className="p-8">
+                  <div className="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 animate-float">
+                    <Pill className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Medicine Delivery</h3>
+                  <p className="text-gray-700 mb-6 leading-relaxed">
+                    Order prescribed medicines and over-the-counter drugs with guaranteed authenticity. 
+                    Fast, secure delivery to your doorstep with real-time tracking.
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center" data-aos="fade-right" data-aos-delay="200">
+                      <Globe className="h-4 w-4 text-blue-500 mr-2 animate-pulse" />
+                      Pan-India Delivery
+                    </li>
+                    <li className="flex items-center" data-aos="fade-right" data-aos-delay="250">
+                      <Clock className="h-4 w-4 text-purple-500 mr-2 animate-spin-slow" />
+                      Same Day Delivery
+                    </li>
+                    <li className="flex items-center" data-aos="fade-right" data-aos-delay="300">
+                      <Shield className="h-4 w-4 text-blue-500 mr-2 animate-bounce" />
+                      Authentic Medicines
+                    </li>
+                  </ul>
                 </div>
-                <div className="flex-1 flex justify-center items-center animate-fadeInRight" style={{animationDelay: '0.8s', animationFillMode: 'both'}}>
-                    <div className="bg-white/80 rounded-2xl shadow-xl p-4 w-80 md:w-96 animate-float">
-                        <img
-                            src="/doc2.jpg"
-                            alt="Healthcare Team"
-                            className="rounded-xl shadow-md w-full h-48 md:h-56 object-cover object-center transition-transform duration-700 hover:scale-105 hover:shadow-2xl"
-                        />
-                    </div>
+              </div>
+
+              <div className="border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 bg-gradient-to-br from-blue-50 to-purple-100 rounded-2xl group cursor-pointer" data-aos="fade-up" data-aos-delay="300">
+                <div className="p-8">
+                  <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 animate-float">
+                    <Microscope className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Lab Tests</h3>
+                  <p className="text-gray-700 mb-6 leading-relaxed">
+                    Book diagnostic tests with home sample collection. Get accurate results with digital reports 
+                    delivered directly to your account within 24-48 hours.
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center" data-aos="fade-right" data-aos-delay="200">
+                      <Users className="h-4 w-4 text-blue-500 mr-2 animate-pulse" />
+                      Home Collection
+                    </li>
+                    <li className="flex items-center" data-aos="fade-right" data-aos-delay="250">
+                      <Award className="h-4 w-4 text-purple-500 mr-2 animate-spin-slow" />
+                      NABL Certified Labs
+                    </li>
+                    <li className="flex items-center" data-aos="fade-right" data-aos-delay="300">
+                      <Clock className="h-4 w-4 text-blue-500 mr-2 animate-bounce" />
+                      24-48 Hour Results
+                    </li>
+                  </ul>
                 </div>
-            </section>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            {/* Doctors Section */}
-            <section className="w-full px-2 md:px-8 lg:px-16 mb-16 animate-fadeInUp" style={{animationDelay: '1s', animationFillMode: 'both'}}>
-                <Doctors />
-            </section>
+        {/* Stats Section */}
+        <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600" data-aos="fade-up">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-white mb-4">Trusted by Thousands</h2>
+              <p className="text-blue-100 text-lg">Making healthcare accessible across the nation</p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <div className="text-center" data-aos="zoom-in" data-aos-delay="100">
+                <div className="text-4xl font-bold text-white mb-2">50K+</div>
+                <div className="text-blue-100">Happy Patients</div>
+              </div>
+              <div className="text-center" data-aos="zoom-in" data-aos-delay="200">
+                <div className="text-4xl font-bold text-white mb-2">500+</div>
+                <div className="text-blue-100">Certified Doctors</div>
+              </div>
+              <div className="text-center" data-aos="zoom-in" data-aos-delay="300">
+                <div className="text-4xl font-bold text-white mb-2">100K+</div>
+                <div className="text-blue-100">Medicines Delivered</div>
+              </div>
+              <div className="text-center" data-aos="zoom-in" data-aos-delay="400">
+                <div className="text-4xl font-bold text-white mb-2">25K+</div>
+                <div className="text-blue-100">Lab Tests Completed</div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            {/* Footer Section */}
-            <Footer />
-        </div>
-    );
+        {/* CTA Section */}
+        <section className="py-20" data-aos="fade-up">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Ready to Experience Better Healthcare?</h2>
+            <p className="text-xl text-gray-600 mb-8">
+              Join thousands of satisfied patients who trust MediConnect for their healthcare needs
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button className="bg-blue-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 animate-float">
+                Start Your Journey
+              </button>
+              <Link to="/">
+                <button className="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg text-lg font-semibold hover:bg-purple-50 transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 animate-float">
+                  Learn More
+                </button>
+              </Link>
+            </div>
+          </div>
+        </section>
+      </div>
+      <Footer />
+    </div>
+  );
 };
+
+// Tailwind config: add custom animations for fade-in, float, spin-slow, and gradient-x
+// theme: { extend: { keyframes: { 'fade-in': { '0%': { opacity: 0 }, '100%': { opacity: 1 } }, float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-8px)' } }, 'spin-slow': { '100%': { transform: 'rotate(360deg)' } }, 'gradient-x': { '0%, 100%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' } } }, animation: { 'fade-in': 'fade-in 1.2s ease-out', float: 'float 3s ease-in-out infinite', 'spin-slow': 'spin 3s linear infinite', 'gradient-x': 'gradient-x 5s ease-in-out infinite' } } }
 
 export default About;

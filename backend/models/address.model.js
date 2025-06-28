@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-
+const mongoose=require('mongoose')
 const addressSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -22,7 +21,7 @@ const addressSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  phone:{
+  phone: {
     type: String,
     required: true
   }
