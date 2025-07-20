@@ -1,29 +1,20 @@
 const Address = require('../models/address.model');
-const User = require('../models/user.model');
 
 exports.createAddress = async (req, res) => {
   try {
-    const { user, street, city, state, zip, phone } = req.body;
-
-    if (!user || !street || !city || !state || !zip || !phone) {
-      return res.status(400).json({ message: 'All fields are required.' });
+    const { street, city, state, zip, phone } = req.body;
+    const userId = req.user.userId; // Correctly get userId from auth middleware
+    if (!userId || !street || !city || !state || !zip) {
+      return res.status(400).json({ message: 'Street, city, state, and zip are required.' });
     }
-
-    // Validate user exists
-    const userDoc = await User.findById(user);
-    if (!userDoc) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
-
     const newAddress = new Address({
-      user, // store ObjectId
+      user: userId,
       street,
       city,
       state,
       zip,
       phone
     });
-
     const savedAddress = await newAddress.save();
     res.status(201).json(savedAddress);
   } catch (error) {
@@ -33,11 +24,8 @@ exports.createAddress = async (req, res) => {
 
 exports.getAddresses = async (req, res) => {
   try {
-    const { user } = req.body;
-    if (!user) {
-      return res.status(400).json({ message: 'User ObjectId is required in request body.' });
-    }
-    const addresses = await Address.find({ user });
+    const userId = req.user.userId;
+    const addresses = await Address.find({ user: userId });
     res.json(addresses);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -47,11 +35,8 @@ exports.getAddresses = async (req, res) => {
 exports.deleteAddress = async (req, res) => {
   try {
     const addressId = req.params.id;
-    const { user } = req.body;
-    if (!user) {
-      return res.status(400).json({ message: 'User ObjectId is required in request body.' });
-    }
-    const address = await Address.findOneAndDelete({ _id: addressId, user });
+    const userId = req.user.userId;
+    const address = await Address.findOneAndDelete({ _id: addressId, user: userId });
     if (!address) {
       return res.status(404).json({ message: 'Address not found' });
     }

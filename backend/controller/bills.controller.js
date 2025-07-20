@@ -1,11 +1,9 @@
 const Bill = require('../models/bills.model');
-const User = require('../models/user.model');
-const Address = require('../models/address.model');
 
 exports.createBill = async (req, res) => {
   try {
     const { address, cost, medicines } = req.body;
-    const userId = req.user.userId;
+    const userId = req.user.userId; // Correctly get userId from auth middleware
     if (!userId || !address || !cost || !medicines) {
       return res.status(400).json({ message: 'All fields are required.' });
     }
@@ -20,7 +18,10 @@ exports.createBill = async (req, res) => {
 exports.getBills = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const bills = await Bill.find({ user: userId }).populate('address');
+    // Also populate user info, hiding the password
+    const bills = await Bill.find({ user: userId })
+      .populate('address')
+      .populate('user', 'username email');
     res.json(bills);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });

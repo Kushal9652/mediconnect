@@ -53,7 +53,7 @@ const Testimonials = () => {
     carousel.scrollLeft = startScroll;
 
     let animationFrame;
-    let speed = 1.2; // px per frame
+    let speed = 5; // px per frame (increased for faster movement)
 
     function animate() {
       if (carousel) {
@@ -74,13 +74,13 @@ const Testimonials = () => {
       <h2 className="text-4xl font-extrabold text-violet-700 mb-10 tracking-tight drop-shadow-lg animate-fadeInDown" data-aos="fade-down">What Our Users Say</h2>
       <div
         ref={carouselRef}
-        className="w-full max-w-full flex overflow-x-auto no-scrollbar space-x-6 snap-x snap-mandatory px-0 md:px-2 transition-all duration-700"
+        className="w-full max-w-full flex flex-nowrap overflow-x-auto no-scrollbar space-x-6 snap-x snap-mandatory px-0 md:px-2 transition-all duration-700"
         style={{ scrollBehavior: 'smooth', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {infiniteTestimonials.map((testimonial, index) => (
           <div
             key={index}
-            className="min-w-[240px] max-w-[240px] h-[260px] bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-4 flex flex-col items-center justify-between hover:scale-105 transition-transform duration-500 border-t-4 border-violet-200 snap-center group cursor-pointer relative animate-float"
+            className="min-w-[240px] max-w-[240px] flex-shrink-0 h-[260px] bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-4 flex flex-col items-center justify-between hover:scale-105 transition-transform duration-500 border-t-4 border-violet-200 snap-center group cursor-pointer relative animate-float"
             style={{ boxShadow: '0 4px 16px 0 rgba(76, 29, 149, 0.12)' }}
             data-aos="fade-up"
             data-aos-delay={(index % totalCards) * 100}

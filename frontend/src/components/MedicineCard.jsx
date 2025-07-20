@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ShoppingCart, Star, Check, X, Heart, ArrowLeft } from "lucide-react";
+import { ShoppingCart, Star, Check, X, ArrowLeft } from "lucide-react";
 
 /**
  * @param {{ medicine: any, onAddToCart: Function, animationDelay: number }} props
@@ -8,7 +8,6 @@ const MedicineCard = ({ medicine, onAddToCart, animationDelay }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
   const [imageError, setImageError] = useState(false);
 
   const handleAddToCart = () => {
@@ -21,10 +20,6 @@ const MedicineCard = ({ medicine, onAddToCart, animationDelay }) => {
       setIsAdded(false);
       setShowNotification(false);
     }, 2000);
-  };
-
-  const handleLike = () => {
-    setIsLiked(!isLiked);
   };
 
   const handleImageError = () => {
@@ -57,20 +52,6 @@ const MedicineCard = ({ medicine, onAddToCart, animationDelay }) => {
       {/* Back Arrow Button */}
       <button className="absolute top-4 left-4 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-300 hover:scale-110">
         <ArrowLeft className="w-4 h-4 text-gray-700" />
-      </button>
-      
-      {/* Like Button */}
-      <button 
-        onClick={handleLike}
-        className="absolute top-4 right-4 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-300 hover:scale-110"
-      >
-        <Heart 
-          className={`w-4 h-4 transition-all duration-300 ${
-            isLiked 
-              ? 'fill-red-500 text-red-500' 
-              : 'text-gray-700 hover:text-red-500'
-          }`} 
-        />
       </button>
       
       {/* Stock Status */}

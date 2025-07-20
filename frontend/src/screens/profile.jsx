@@ -22,7 +22,7 @@ const Profile = () => {
       try {
         setLoading(true);
         setError('');
-        const res = await axios.get(`${API_BASE_URL}/api/auth/me`, {
+        const res = await axios.get(`${API_BASE_URL}/api/auth/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUser(res.data);

@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./utils/db');
 const userRoutes = require('./routes/user.route');
-const appointmentRoutes = require('./routes/appointment.route');
 const addressRoutes = require('./routes/address.route');
 const billsRoutes = require('./routes/bills.route');
 
@@ -19,7 +18,6 @@ app.use(express.json());
 const port = process.env.PORT || 3000;
 
 app.use('/api/auth', userRoutes);
-app.use(appointmentRoutes);
 app.use('/api/address', addressRoutes);
 app.use('/api/bills', billsRoutes);
 

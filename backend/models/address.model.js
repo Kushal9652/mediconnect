@@ -22,10 +22,10 @@ const addressSchema = new mongoose.Schema({
     required: true
   },
   phone: {
-    type: String,
-    required: true
+    type: String
   }
 });
 
 const Address = mongoose.model('Address', addressSchema);
+
 module.exports = Address;

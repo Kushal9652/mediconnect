@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { createAppointment } = require('../controller/appointment.controller');
-const requireLogin = require('../middleware/requireLogin');
+const authenticateUser = require('../middleware/authenticateuser');
 
-// Create a new appointment
-router.post('/api/appointments', requireLogin, createAppointment);
+router.post('/api/appointments', authenticateUser, createAppointment);
 
 module.exports = router;

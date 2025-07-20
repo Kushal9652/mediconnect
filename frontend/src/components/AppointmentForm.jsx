@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CalendarIcon, Clock, Mail, User, CheckCircle2 } from "lucide-react";
-import { format } from "date-fns";
+import { createAppointment } from '../config/apiConfig';
 
 const AppointmentForm = () => {
   const [formData, setFormData] = useState({
@@ -11,23 +11,41 @@ const AppointmentForm = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const timeSlots = [
-    "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
-    "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM"
-  ];
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     if (!formData.name || !formData.email || !formData.date || !formData.time) {
       alert("All fields are required to book your appointment.");
       return;
     }
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    alert(`Appointment Booked Successfully!\nYour appointment is scheduled for ${format(new Date(formData.date), "PPP")} at ${formData.time}`);
+    try {
+      // Try to get user id from token (if available)
+      let id = null;
+      const token = localStorage.getItem('token');
+      if (token) {
+        // Try to decode the token to get user id (if JWT), or fetch user info from backend if needed
+        // For now, try to get user id from localStorage if stored
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+          try {
+            const user = JSON.parse(userStr);
+            id = user._id || user.id;
+          } catch {}
+        }
+      }
+      const payload = { ...formData };
+      if (id) payload.id = id;
+      await createAppointment(payload, token);
+      setIsSubmitted(true);
+      alert(`Appointment Booked Successfully!\nYour appointment is scheduled for ${formData.date} at ${formData.time}`);
+    } catch (err) {
+      setError(err.message || 'Failed to book appointment.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (field, value) => {
@@ -47,7 +65,7 @@ const AppointmentForm = () => {
           <div className="space-y-3 text-gray-700 mb-8 bg-purple-50 rounded-xl p-6">
             <p><strong className="text-purple-700">Name:</strong> {formData.name}</p>
             <p><strong className="text-purple-700">Email:</strong> {formData.email}</p>
-            <p><strong className="text-purple-700">Date:</strong> {formData.date && format(new Date(formData.date), "PPP")}</p>
+            <p><strong className="text-purple-700">Date:</strong> {formData.date}</p>
             <p><strong className="text-purple-700">Time:</strong> {formData.time}</p>
           </div>
           <p className="text-sm text-gray-600 mb-8">
@@ -69,7 +87,7 @@ const AppointmentForm = () => {
 
   return (
     <div className="max-w-lg mx-auto">
-      <form onSubmit={handleSubmit} className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-10 animate-fade-in border border-purple-100">
+      <form onSubmit={handleSubmit} noValidate className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-10 animate-fade-in border border-purple-100">
         <div className="space-y-8">
           {/* Name Field */}
           <div className="space-y-3 group">
@@ -95,7 +113,7 @@ const AppointmentForm = () => {
             </label>
             <input
               id="email"
-              type="email"
+              type="text"
               placeholder="Enter your email address"
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
@@ -110,11 +128,11 @@ const AppointmentForm = () => {
               Appointment Date
             </label>
             <input
-              type="date"
+              type="text"
+              placeholder="YYYY-MM-DD"
               value={formData.date}
               onChange={e => handleInputChange("date", e.target.value)}
               className="h-14 border-2 border-purple-200 focus:border-purple-500 focus:ring-0 transition-all duration-300 rounded-xl bg-white/50 backdrop-blur-sm hover:bg-white/70 w-full px-4"
-              min={new Date().toISOString().split('T')[0]}
             />
           </div>
 
@@ -124,17 +142,17 @@ const AppointmentForm = () => {
               <Clock className="w-5 h-5 mr-3 text-blue-600 group-hover:scale-110 transition-transform duration-200" />
               Appointment Time
             </label>
-            <select
+            <input
+              type="text"
+              placeholder="HH:MM AM/PM"
               value={formData.time}
               onChange={e => handleInputChange("time", e.target.value)}
               className="h-14 border-2 border-purple-200 focus:border-blue-500 focus:ring-0 transition-all duration-300 rounded-xl bg-white/50 backdrop-blur-sm hover:bg-white/70 w-full px-4"
-            >
-              <option value=""></option>
-              {timeSlots.map((time) => (
-                <option key={time} value={time}>{time}</option>
-              ))}
-            </select>
+            />
           </div>
+
+          {/* Error Message */}
+          {error && <div className="text-red-600 text-center font-semibold py-2">{error}</div>}
 
           {/* Submit Button */}
           <button

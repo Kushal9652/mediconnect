@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { Heart, ArrowLeft, Minus, Plus, Trash2, ShoppingBag, CreditCard } from "lucide-react";
+import {  ArrowLeft, Minus, Plus, Trash2, ShoppingBag, CreditCard } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../components/CartContext";
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, clearCart, getTotalPrice, getTotalItems } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
 
   const handleCheckout = () => {
@@ -19,9 +18,6 @@ const Cart = () => {
     }, 2000);
   };
 
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
@@ -38,20 +34,6 @@ const Cart = () => {
             </button>
             <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
           </div>
-          
-          <button
-            onClick={handleLike}
-            className="flex items-center space-x-2 bg-white/70 backdrop-blur-sm rounded-xl px-4 py-2 border border-purple-100 hover:bg-white transition-all duration-300 hover:scale-105"
-          >
-            <Heart 
-              className={`w-5 h-5 transition-all duration-300 ${
-                isLiked 
-                  ? 'fill-red-500 text-red-500' 
-                  : 'text-purple-600 hover:text-red-500'
-              }`} 
-            />
-            <span className="font-semibold text-gray-700">Wishlist</span>
-          </button>
         </div>
 
         {cartItems.length === 0 ? (
