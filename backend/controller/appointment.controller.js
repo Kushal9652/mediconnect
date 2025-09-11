@@ -4,8 +4,8 @@ const User = require('../models/user.model');
 exports.createAppointment = async (req, res) => {
   try {
     const { name, email, date, time } = req.body;
-    const { id } = req.user;
-    const user = await User.findById(id);
+    const { userId } = req.user;
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }

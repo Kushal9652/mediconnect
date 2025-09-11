@@ -114,9 +114,13 @@ const LoginForm = () => {
                 />
                 <span className="text-purple-700">Remember me</span>
               </label>
-              <a href="#" className="text-purple-600 hover:text-purple-800 transition-colors">
+              <button 
+                type="button"
+                onClick={() => alert("Forgot password functionality will be implemented soon")}
+                className="text-purple-600 hover:text-purple-800 transition-colors bg-transparent border-none cursor-pointer underline"
+              >
                 Forgot password?
-              </a>
+              </button>
             </div>
             
             <button

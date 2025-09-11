@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {  ArrowLeft, Minus, Plus, Trash2, ShoppingBag, CreditCard } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../components/CartContext";
@@ -65,12 +65,21 @@ const Cart = () => {
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className="flex items-center space-x-6">
-                    <div className="w-24 h-24 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl overflow-hidden">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-full h-full object-cover"
-                      />
+                    <div className="w-24 h-24 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl overflow-hidden flex items-center justify-center">
+                      {item.type === 'lab-test' && item.icon ? (
+                        <div className={`w-16 h-16 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center`}>
+                          {React.createElement(item.icon, { className: "w-8 h-8 text-white" })}
+                        </div>
+                      ) : (
+                        <img
+                          src={item.image || "https://via.placeholder.com/300x300/8B5CF6/FFFFFF?text=Item"}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.src = "https://via.placeholder.com/300x300/8B5CF6/FFFFFF?text=Item";
+                          }}
+                        />
+                      )}
                     </div>
                     
                     <div className="flex-1">

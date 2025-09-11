@@ -5,6 +5,7 @@ const connectDB = require('./utils/db');
 const userRoutes = require('./routes/user.route');
 const addressRoutes = require('./routes/address.route');
 const billsRoutes = require('./routes/bills.route');
+const appointmentRoutes = require('./routes/appointment.route');
 
 
 dotenv.config();
@@ -20,6 +21,7 @@ const port = process.env.PORT || 3000;
 app.use('/api/auth', userRoutes);
 app.use('/api/address', addressRoutes);
 app.use('/api/bills', billsRoutes);
+app.use('/api/appointments', appointmentRoutes);
 
 connectDB(process.env.MONGODB_URI)
   .then(() => console.log('mongodb connected'))

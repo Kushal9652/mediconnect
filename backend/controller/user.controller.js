@@ -8,8 +8,8 @@ const registerUser= async (req, res) => {
 
     try {
         // Check if user already exists
-        const existingUser = await User.find({ email });
-        if (existingUser.length > 0) {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
             return res.status(400).json({ message: 'User already exists' });
         }
         // Hash the password
@@ -43,23 +43,23 @@ const loginUser = async (req, res) => {
 
     try {
         // Find the user by email
-        const user = await User.find ({ email });
-        if (user.length === 0) {
+        const user = await User.findOne({ email });
+        if (!user) {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
         // Check if the password is correct
-        const isPasswordValid = await bcrypt.compare(password, user[0].password);
+        const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
         // Generate a JWT token
-        const token = jwt.sign({ userId: user[0]._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         // Respond with the user data and token
         res.status(200).json({
             user: {
-                id: user[0]._id,
-                username: user[0].username,
-                email: user[0].email
+                id: user._id,
+                username: user.username,
+                email: user.email
             },
             token
         });

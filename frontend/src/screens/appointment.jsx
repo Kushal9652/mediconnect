@@ -1,6 +1,5 @@
 import AppointmentForm from "../components/AppointmentForm";
-import { ArrowLeft, Calendar, Clock, Mail, User, Shield, Heart, Star, Phone, MapPin, Award } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Calendar, Clock, Mail, User, Shield, Heart, Star, Phone, MapPin, Award } from "lucide-react";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { CalendarIcon, Clock, Mail, User, CheckCircle2 } from "lucide-react";
 import { createAppointment } from '../config/apiConfig';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const AppointmentForm = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +11,7 @@ const AppointmentForm = () => {
     date: "",
     time: "",
   });
+  const [selectedDate, setSelectedDate] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -52,6 +55,17 @@ const AppointmentForm = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    if (date) {
+      // Format date as YYYY-MM-DD
+      const formattedDate = date.toISOString().split('T')[0];
+      setFormData(prev => ({ ...prev, date: formattedDate }));
+    } else {
+      setFormData(prev => ({ ...prev, date: "" }));
+    }
+  };
+
   if (isSubmitted) {
     return (
       <div className="max-w-lg mx-auto">
@@ -75,6 +89,7 @@ const AppointmentForm = () => {
             onClick={() => {
               setIsSubmitted(false);
               setFormData({ name: "", email: "", date: "", time: "" });
+              setSelectedDate(null);
             }}
             className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-10 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
           >
@@ -127,12 +142,15 @@ const AppointmentForm = () => {
               <CalendarIcon className="w-5 h-5 mr-3 text-purple-600 group-hover:scale-110 transition-transform duration-200" />
               Appointment Date
             </label>
-            <input
-              type="text"
-              placeholder="YYYY-MM-DD"
-              value={formData.date}
-              onChange={e => handleInputChange("date", e.target.value)}
+            <DatePicker
+              selected={selectedDate}
+              onChange={handleDateChange}
+              dateFormat="yyyy-MM-dd"
+              placeholderText="Select appointment date"
+              minDate={new Date()}
               className="h-14 border-2 border-purple-200 focus:border-purple-500 focus:ring-0 transition-all duration-300 rounded-xl bg-white/50 backdrop-blur-sm hover:bg-white/70 w-full px-4"
+              wrapperClassName="w-full"
+              popperClassName="custom-datepicker-popper"
             />
           </div>
 

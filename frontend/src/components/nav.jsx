@@ -62,15 +62,19 @@ const Nav = () => {
             <Link to="/" className="text-violet-600 hover:text-violet-400 transition-colors duration-200 font-medium">
               Home
             </Link>
-            <Link to="/appointment" className="text-violet-600 hover:text-violet-400 transition-colors duration-200 font-medium">
-              Appointment
-            </Link>
-            <Link to="/medicines" className="text-violet-600 hover:text-violet-400 transition-colors duration-200 font-medium">
-              Medicines
-            </Link>
-            <Link to="/lab-test" className="text-violet-600 hover:text-violet-400 transition-colors duration-200 font-medium">
-              Lab Test
-            </Link>
+            {isLoggedIn && (
+              <>
+                <Link to="/appointment" className="text-violet-600 hover:text-violet-400 transition-colors duration-200 font-medium">
+                  Appointment
+                </Link>
+                <Link to="/medicines" className="text-violet-600 hover:text-violet-400 transition-colors duration-200 font-medium">
+                  Medicines
+                </Link>
+                <Link to="/lab-test" className="text-violet-600 hover:text-violet-400 transition-colors duration-200 font-medium">
+                  Lab Test
+                </Link>
+              </>
+            )}
             <Link to="/about" className="text-violet-600 hover:text-violet-400 transition-colors duration-200 font-medium">
               About
             </Link>
@@ -97,29 +101,31 @@ const Nav = () => {
                 <button onClick={handleLogout} className="bg-red-100 text-red-600 px-4 py-2 rounded-md shadow hover:bg-red-200 transition-colors duration-200 font-medium">
                   Logout
                 </button>
+                <Link to="/cart" className="relative group ml-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-7 h-7 text-violet-600 group-hover:text-violet-800 transition-colors duration-200 ${cartPop ? 'animate-bounce' : ''}`}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386a2.25 2.25 0 012.12 1.575l.347 1.04M6.75 7.5h10.5m0 0l1.049 3.146a2.25 2.25 0 01-2.12 2.854H8.82a2.25 2.25 0 01-2.12-1.575L4.5 4.5m2.25 3h10.5m-6.75 9.75a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm7.5 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                  </svg>
+                  {getTotalItems() > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-violet-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[1.2rem] text-center font-medium">{getTotalItems()}</span>
+                  )}
+                </Link>
               </>
             )}
-            <Link to="/cart" className="relative group ml-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-7 h-7 text-violet-600 group-hover:text-violet-800 transition-colors duration-200 ${cartPop ? 'animate-bounce' : ''}`}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386a2.25 2.25 0 012.12 1.575l.347 1.04M6.75 7.5h10.5m0 0l1.049 3.146a2.25 2.25 0 01-2.12 2.854H8.82a2.25 2.25 0 01-2.12-1.575L4.5 4.5m2.25 3h10.5m-6.75 9.75a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm7.5 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-              </svg>
-              {getTotalItems() > 0 && (
-                <span className="absolute -top-2 -right-2 bg-violet-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[1.2rem] text-center font-medium">{getTotalItems()}</span>
-              )}
-            </Link>
           </div>
 
           {/* Mobile Cart & Menu Button */}
           <div className="lg:hidden flex items-center space-x-3">
-            {/* Mobile Cart */}
-            <Link to="/cart" className="relative group">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-6 h-6 text-violet-600 group-hover:text-violet-800 transition-colors duration-200 ${cartPop ? 'animate-bounce' : ''}`}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386a2.25 2.25 0 012.12 1.575l.347 1.04M6.75 7.5h10.5m0 0l1.049 3.146a2.25 2.25 0 01-2.12 2.854H8.82a2.25 2.25 0 01-2.12-1.575L4.5 4.5m2.25 3h10.5m-6.75 9.75a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm7.5 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-              </svg>
-              {getTotalItems() > 0 && (
-                <span className="absolute -top-1 -right-1 bg-violet-600 text-white text-xs rounded-full px-1 py-0.5 min-w-[1rem] text-center font-medium">{getTotalItems()}</span>
-              )}
-            </Link>
+            {/* Mobile Cart - Only show when logged in */}
+            {isLoggedIn && (
+              <Link to="/cart" className="relative group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-6 h-6 text-violet-600 group-hover:text-violet-800 transition-colors duration-200 ${cartPop ? 'animate-bounce' : ''}`}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386a2.25 2.25 0 012.12 1.575l.347 1.04M6.75 7.5h10.5m0 0l1.049 3.146a2.25 2.25 0 01-2.12 2.854H8.82a2.25 2.25 0 01-2.12-1.575L4.5 4.5m2.25 3h10.5m-6.75 9.75a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm7.5 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                </svg>
+                {getTotalItems() > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-violet-600 text-white text-xs rounded-full px-1 py-0.5 min-w-[1rem] text-center font-medium">{getTotalItems()}</span>
+                )}
+              </Link>
+            )}
 
             {/* Mobile Menu Button */}
             <button
@@ -156,27 +162,31 @@ const Nav = () => {
             >
               Home
             </Link>
-            <Link
-              to="/appointment"
-              className="block px-3 py-3 text-base font-medium text-violet-600 hover:text-violet-400 hover:bg-violet-50 rounded-md transition-colors duration-200"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Appointment
-            </Link>
-            <Link
-              to="/medicines"
-              className="block px-3 py-3 text-base font-medium text-violet-600 hover:text-violet-400 hover:bg-violet-50 rounded-md transition-colors duration-200"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Medicines
-            </Link>
-            <Link
-              to="/lab-test"
-              className="block px-3 py-3 text-base font-medium text-violet-600 hover:text-violet-400 hover:bg-violet-50 rounded-md transition-colors duration-200"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Lab Test
-            </Link>
+            {isLoggedIn && (
+              <>
+                <Link
+                  to="/appointment"
+                  className="block px-3 py-3 text-base font-medium text-violet-600 hover:text-violet-400 hover:bg-violet-50 rounded-md transition-colors duration-200"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Appointment
+                </Link>
+                <Link
+                  to="/medicines"
+                  className="block px-3 py-3 text-base font-medium text-violet-600 hover:text-violet-400 hover:bg-violet-50 rounded-md transition-colors duration-200"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Medicines
+                </Link>
+                <Link
+                  to="/lab-test"
+                  className="block px-3 py-3 text-base font-medium text-violet-600 hover:text-violet-400 hover:bg-violet-50 rounded-md transition-colors duration-200"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Lab Test
+                </Link>
+              </>
+            )}
             <Link
               to="/about"
               className="block px-3 py-3 text-base font-medium text-violet-600 hover:text-violet-400 hover:bg-violet-50 rounded-md transition-colors duration-200"
