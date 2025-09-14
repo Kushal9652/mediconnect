@@ -78,6 +78,9 @@ const Nav = () => {
             <Link to="/about" className="text-violet-600 hover:text-violet-400 transition-colors duration-200 font-medium">
               About
             </Link>
+            <Link to="/doctor" className="text-blue-600 hover:text-blue-400 transition-colors duration-200 font-medium border border-blue-200 px-3 py-1 rounded-md">
+              Doctor Portal
+            </Link>
           </div>
 
           {/* Desktop Auth & Cart */}

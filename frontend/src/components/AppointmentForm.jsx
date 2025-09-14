@@ -1,199 +1,244 @@
-import { useState } from "react";
-import { CalendarIcon, Clock, Mail, User, CheckCircle2 } from "lucide-react";
-import { createAppointment } from '../config/apiConfig';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import { useState, useEffect } from "react";
+import { CheckCircle2, Stethoscope, Heart, Users } from "lucide-react";
+import { createAppointment, getAllSpecializations, getDoctorsBySpecialization } from '../config/apiConfig';
 
 const AppointmentForm = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    date: "",
-    time: "",
+    healthIssue: "",
+    symptoms: "",
+    specialization: "",
+    doctorId: "",
   });
-  const [selectedDate, setSelectedDate] = useState(null);
+
+  const [specializations, setSpecializations] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+  const [loadingDoctors, setLoadingDoctors] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    if (!formData.name || !formData.email || !formData.date || !formData.time) {
-      alert("All fields are required to book your appointment.");
+  useEffect(() => {
+    fetchSpecializations();
+  }, []);
+
+  const fetchSpecializations = async () => {
+    try {
+      const response = await getAllSpecializations();
+      setSpecializations(response.data);
+    } catch (error) {
+      console.error('Error fetching specializations:', error);
+    }
+  };
+
+  const fetchDoctorsBySpecialization = async (specialization) => {
+    if (!specialization) {
+      setDoctors([]);
       return;
     }
-    setIsSubmitting(true);
+    
+    setLoadingDoctors(true);
     try {
-      // Try to get user id from token (if available)
-      let id = null;
-      const token = localStorage.getItem('token');
-      if (token) {
-        // Try to decode the token to get user id (if JWT), or fetch user info from backend if needed
-        // For now, try to get user id from localStorage if stored
-        const userStr = localStorage.getItem('user');
-        if (userStr) {
-          try {
-            const user = JSON.parse(userStr);
-            id = user._id || user.id;
-          } catch {}
-        }
-      }
-      const payload = { ...formData };
-      if (id) payload.id = id;
-      await createAppointment(payload, token);
-      setIsSubmitted(true);
-      alert(`Appointment Booked Successfully!\nYour appointment is scheduled for ${formData.date} at ${formData.time}`);
-    } catch (err) {
-      setError(err.message || 'Failed to book appointment.');
+      const response = await getDoctorsBySpecialization(specialization);
+      setDoctors(response.data);
+    } catch (error) {
+      console.error('Error fetching doctors:', error);
+      setDoctors([]);
     } finally {
-      setIsSubmitting(false);
+      setLoadingDoctors(false);
     }
   };
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    
+    if (field === 'specialization') {
+      setFormData(prev => ({ ...prev, doctorId: "" }));
+      fetchDoctorsBySpecialization(value);
+    }
   };
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-    if (date) {
-      // Format date as YYYY-MM-DD
-      const formattedDate = date.toISOString().split('T')[0];
-      setFormData(prev => ({ ...prev, date: formattedDate }));
-    } else {
-      setFormData(prev => ({ ...prev, date: "" }));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    
+    if (!formData.healthIssue || !formData.specialization || !formData.doctorId) {
+      setError("Health issue, specialization, and doctor selection are required to book your appointment.");
+      return;
     }
+
+    setIsSubmitting(true);
+    try {
+      const token = localStorage.getItem('token');
+      
+      const selectedDoctor = doctors.find(doc => doc._id === formData.doctorId);
+      
+      // Get current date and time
+      const now = new Date();
+      const currentDate = now.toISOString().split('T')[0];
+      const currentTime = now.toTimeString().split(' ')[0].substring(0, 5);
+      
+      const appointmentData = {
+        ...formData,
+        date: currentDate,
+        time: currentTime,
+        doctor: {
+          doctorId: formData.doctorId,
+          doctorName: selectedDoctor?.name,
+          specialization: formData.specialization
+        }
+      };
+      
+      const response = await createAppointment(appointmentData, token || null);
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error("Error booking appointment:", error);
+      setError(error.message || "Failed to book appointment. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      healthIssue: "",
+      symptoms: "",
+      specialization: "",
+      doctorId: "",
+    });
+    setIsSubmitted(false);
+    setError("");
   };
 
   if (isSubmitted) {
     return (
-      <div className="max-w-lg mx-auto">
-        <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-10 text-center animate-scale-in border border-purple-100">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full mb-8 animate-scale-in">
-            <CheckCircle2 className="w-10 h-10 text-purple-600" />
-          </div>
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-700 to-blue-700 bg-clip-text text-transparent mb-6">
-            Appointment Confirmed!
-          </h2>
-          <div className="space-y-3 text-gray-700 mb-8 bg-purple-50 rounded-xl p-6">
-            <p><strong className="text-purple-700">Name:</strong> {formData.name}</p>
-            <p><strong className="text-purple-700">Email:</strong> {formData.email}</p>
-            <p><strong className="text-purple-700">Date:</strong> {formData.date}</p>
-            <p><strong className="text-purple-700">Time:</strong> {formData.time}</p>
-          </div>
-          <p className="text-sm text-gray-600 mb-8">
-            A confirmation email has been sent to your email address.
-          </p>
-          <button 
-            onClick={() => {
-              setIsSubmitted(false);
-              setFormData({ name: "", email: "", date: "", time: "" });
-              setSelectedDate(null);
-            }}
-            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-10 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
-          >
-            Book Another Appointment
-          </button>
+      <div className="max-w-2xl mx-auto bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-purple-100 p-8 text-center">
+        <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-100 to-green-200 rounded-full mb-6">
+          <CheckCircle2 className="w-10 h-10 text-green-600" />
         </div>
+        <h2 className="text-3xl font-bold text-gray-800 mb-4">Appointment Booked Successfully!</h2>
+        <p className="text-lg text-gray-600 mb-6">
+          Thank you for choosing MediConnect. Your appointment has been confirmed.
+        </p>
+        <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-6 mb-6">
+          <h3 className="font-semibold text-gray-800 mb-2">Appointment Details:</h3>
+          <div className="text-gray-600 space-y-1">
+            <p><strong>Doctor:</strong> {doctors.find(doc => doc._id === formData.doctorId)?.name}</p>
+            <p><strong>Specialization:</strong> {formData.specialization}</p>
+            <p><strong>Health Issue:</strong> {formData.healthIssue}</p>
+            {formData.symptoms && <p><strong>Symptoms:</strong> {formData.symptoms}</p>}
+          </div>
+        </div>
+        <button 
+          onClick={resetForm}
+          className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-3 px-8 rounded-xl font-semibold transition-all duration-300"
+        >
+          Book Another Appointment
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="max-w-lg mx-auto">
-      <form onSubmit={handleSubmit} noValidate className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-10 animate-fade-in border border-purple-100">
-        <div className="space-y-8">
-          {/* Name Field */}
-          <div className="space-y-3 group">
-            <label htmlFor="name" className="text-sm font-semibold text-gray-700 flex items-center group-hover:text-purple-700 transition-colors duration-200">
-              <User className="w-5 h-5 mr-3 text-purple-600 group-hover:scale-110 transition-transform duration-200" />
-              Full Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              placeholder="Enter your full name"
-              value={formData.name}
-              onChange={(e) => handleInputChange("name", e.target.value)}
-              className="h-14 border-2 border-purple-200 focus:border-purple-500 focus:ring-0 transition-all duration-300 rounded-xl bg-white/50 backdrop-blur-sm hover:bg-white/70 w-full px-4"
-            />
-          </div>
+    <div className="max-w-2xl mx-auto bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-purple-100 p-8">
+      <div className="text-center mb-8">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full mb-4">
+          <Stethoscope className="w-8 h-8 text-purple-600" />
+        </div>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">Book Your Appointment</h2>
+        <p className="text-gray-600">Fill out the form below to schedule your consultation</p>
+      </div>
 
-          {/* Email Field */}
-          <div className="space-y-3 group">
-            <label htmlFor="email" className="text-sm font-semibold text-gray-700 flex items-center group-hover:text-purple-700 transition-colors duration-200">
-              <Mail className="w-5 h-5 mr-3 text-blue-600 group-hover:scale-110 transition-transform duration-200" />
-              Email Address
-            </label>
-            <input
-              id="email"
-              type="text"
-              placeholder="Enter your email address"
-              value={formData.email}
-              onChange={(e) => handleInputChange("email", e.target.value)}
-              className="h-14 border-2 border-purple-200 focus:border-blue-500 focus:ring-0 transition-all duration-300 rounded-xl bg-white/50 backdrop-blur-sm hover:bg-white/70 w-full px-4"
-            />
-          </div>
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
+          {error}
+        </div>
+      )}
 
-          {/* Date Field */}
-          <div className="space-y-3 group">
-            <label className="text-sm font-semibold text-gray-700 flex items-center group-hover:text-purple-700 transition-colors duration-200">
-              <CalendarIcon className="w-5 h-5 mr-3 text-purple-600 group-hover:scale-110 transition-transform duration-200" />
-              Appointment Date
-            </label>
-            <DatePicker
-              selected={selectedDate}
-              onChange={handleDateChange}
-              dateFormat="yyyy-MM-dd"
-              placeholderText="Select appointment date"
-              minDate={new Date()}
-              className="h-14 border-2 border-purple-200 focus:border-purple-500 focus:ring-0 transition-all duration-300 rounded-xl bg-white/50 backdrop-blur-sm hover:bg-white/70 w-full px-4"
-              wrapperClassName="w-full"
-              popperClassName="custom-datepicker-popper"
-            />
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* Time Field */}
-          <div className="space-y-3 group">
-            <label className="text-sm font-semibold text-gray-700 flex items-center group-hover:text-purple-700 transition-colors duration-200">
-              <Clock className="w-5 h-5 mr-3 text-blue-600 group-hover:scale-110 transition-transform duration-200" />
-              Appointment Time
-            </label>
-            <input
-              type="text"
-              placeholder="HH:MM AM/PM"
-              value={formData.time}
-              onChange={e => handleInputChange("time", e.target.value)}
-              className="h-14 border-2 border-purple-200 focus:border-blue-500 focus:ring-0 transition-all duration-300 rounded-xl bg-white/50 backdrop-blur-sm hover:bg-white/70 w-full px-4"
-            />
-          </div>
-
-          {/* Error Message */}
-          {error && <div className="text-red-600 text-center font-semibold py-2">{error}</div>}
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full h-14 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl disabled:transform-none disabled:hover:scale-100 mt-8"
+        <div className="space-y-3">
+          <label className="text-sm font-semibold text-gray-700 flex items-center">
+            <Stethoscope className="w-5 h-5 mr-3 text-purple-600" />
+            Medical Specialization
+          </label>
+          <select
+            value={formData.specialization}
+            onChange={e => handleInputChange("specialization", e.target.value)}
+            className="h-14 border-2 border-purple-200 focus:border-purple-500 focus:ring-0 transition-all duration-300 rounded-xl bg-white/50 w-full px-4"
+            required
           >
-            {isSubmitting ? (
-              <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-3"></div>
-                Booking Your Appointment...
+            <option value="">Select specialization</option>
+            {specializations.map((spec) => (
+              <option key={spec} value={spec}>{spec}</option>
+            ))}
+          </select>
+        </div>
+
+        {formData.specialization && (
+          <div className="space-y-3">
+            <label className="text-sm font-semibold text-gray-700 flex items-center">
+              <Users className="w-5 h-5 mr-3 text-blue-600" />
+              Select Doctor
+            </label>
+            {loadingDoctors ? (
+              <div className="h-14 border-2 border-purple-200 rounded-xl bg-white/50 flex items-center justify-center">
+                <span className="text-gray-500">Loading doctors...</span>
               </div>
             ) : (
-              "Book Appointment"
+              <select
+                value={formData.doctorId}
+                onChange={e => handleInputChange("doctorId", e.target.value)}
+                className="h-14 border-2 border-purple-200 focus:border-purple-500 focus:ring-0 transition-all duration-300 rounded-xl bg-white/50 w-full px-4"
+                required
+              >
+                <option value="">Select a doctor</option>
+                {doctors.map((doctor) => (
+                  <option key={doctor._id} value={doctor._id}>
+                    {doctor.name} - {doctor.experience} years exp. (₹{doctor.consultationFee})
+                  </option>
+                ))}
+              </select>
             )}
-          </button>
+          </div>
+        )}
+
+        <div className="space-y-3">
+          <label className="text-sm font-semibold text-gray-700 flex items-center">
+            <Heart className="w-5 h-5 mr-3 text-red-500" />
+            Health Issue / Reason for Visit
+          </label>
+          <input
+            type="text"
+            placeholder="Describe your primary health concern"
+            value={formData.healthIssue}
+            onChange={e => handleInputChange("healthIssue", e.target.value)}
+            className="h-14 border-2 border-purple-200 focus:border-purple-500 focus:ring-0 transition-all duration-300 rounded-xl bg-white/50 w-full px-4"
+            required
+          />
         </div>
 
-        <div className="mt-8 text-center">
-          <p className="text-xs text-gray-500">
-            By booking an appointment, you agree to our terms of service and privacy policy.
-          </p>
+        <div className="space-y-3">
+          <label className="text-sm font-semibold text-gray-700 flex items-center">
+            <Heart className="w-5 h-5 mr-3 text-orange-500" />
+            Additional Symptoms (Optional)
+          </label>
+          <textarea
+            placeholder="Describe any additional symptoms or details"
+            value={formData.symptoms}
+            onChange={e => handleInputChange("symptoms", e.target.value)}
+            rows={3}
+            className="border-2 border-purple-200 focus:border-purple-500 focus:ring-0 transition-all duration-300 rounded-xl bg-white/50 w-full px-4 py-3 resize-none"
+          />
         </div>
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 text-white py-4 px-6 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+        >
+          {isSubmitting ? "Booking Appointment..." : "Book Appointment"}
+        </button>
       </form>
     </div>
   );

@@ -1,21 +1,37 @@
 import React, { useState } from "react";
-import {  ArrowLeft, Minus, Plus, Trash2, ShoppingBag, CreditCard } from "lucide-react";
+import {  ArrowLeft, Minus, Plus, Trash2, ShoppingBag, CreditCard, CheckCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../components/CartContext";
+import CheckoutForm from "../components/PaymentForm";
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, clearCart, getTotalPrice, getTotalItems } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleCheckout = () => {
-    setIsCheckingOut(true);
-    // Simulate checkout process
+    setShowPaymentForm(true);
+  };
+
+  const handlePaymentSuccess = () => {
+    setPaymentSuccess(true);
     setTimeout(() => {
       clearCart();
-      setIsCheckingOut(false);
+      setShowPaymentForm(false);
+      setPaymentSuccess(false);
       alert("Order placed successfully! Thank you for your purchase.");
     }, 2000);
+  };
+
+  const handlePaymentError = (error) => {
+    console.error('Payment error:', error);
+    setShowPaymentForm(false);
+  };
+
+  const getTotalWithTax = () => {
+    return getTotalPrice() * 1.08;
   };
 
 
@@ -48,6 +64,100 @@ const Cart = () => {
                 Browse Medicines
               </button>
             </Link>
+          </div>
+        ) : paymentSuccess ? (
+          <div className="text-center py-20 animate-fade-in relative overflow-hidden">
+            {/* Success Animation Background */}
+            <div className="absolute inset-0 pointer-events-none">
+              {[...Array(30)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute animate-bounce"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    animationDelay: `${i * 0.1}s`,
+                    animationDuration: '2s'
+                  }}
+                >
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center shadow-lg animate-spin">
+                    <CheckCircle className="w-3 h-3 text-white" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="relative z-10">
+              <div className="w-32 h-32 bg-gradient-to-br from-green-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-8 animate-pulse">
+                <CheckCircle className="w-16 h-16 text-green-600 animate-bounce" />
+              </div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4 animate-fade-in">Payment Successful!</h2>
+              <p className="text-gray-600 mb-8 animate-fade-in">Your order has been placed successfully. You will receive a confirmation email shortly.</p>
+              <Link to="/medicines">
+                <button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-3 text-lg transition-all duration-300 hover:scale-105 rounded-xl font-semibold animate-bounce">
+                  Continue Shopping
+                </button>
+              </Link>
+            </div>
+          </div>
+        ) : showPaymentForm ? (
+          <div className="max-w-2xl mx-auto">
+            <div className="flex items-center space-x-4 mb-8">
+              <button
+                onClick={() => setShowPaymentForm(false)}
+                className="flex items-center space-x-2 bg-white/70 backdrop-blur-sm rounded-xl px-4 py-2 border border-purple-100 hover:bg-white transition-all duration-300 hover:scale-105"
+              >
+                <ArrowLeft className="w-5 h-5 text-purple-600" />
+                <span className="font-semibold text-gray-700">Back to Cart</span>
+              </button>
+              <h1 className="text-3xl font-bold text-gray-900">Secure Checkout</h1>
+            </div>
+            
+            <div className="grid lg:grid-cols-2 gap-8">
+              {/* Order Summary */}
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-purple-100 p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-6">Order Summary</h3>
+                
+                <div className="space-y-4 mb-6">
+                  {cartItems.map(item => (
+                    <div key={item.id} className="flex justify-between text-gray-600">
+                      <span>{item.name} × {item.quantity}</span>
+                      <span>₹{(item.price * item.quantity).toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="border-t border-purple-100 pt-4 mb-6">
+                  <div className="flex justify-between text-sm text-gray-600 mb-2">
+                    <span>Subtotal</span>
+                    <span>₹{getTotalPrice().toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-600 mb-2">
+                    <span>Shipping</span>
+                    <span>Free</span>
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-600 mb-4">
+                    <span>Tax</span>
+                    <span>₹{(getTotalPrice() * 0.08).toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-xl font-bold text-gray-900">
+                    <span>Total</span>
+                    <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                      ₹{getTotalWithTax().toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Payment Form */}
+              <div>
+                <CheckoutForm 
+                  totalAmount={getTotalWithTax()}
+                  onPaymentSuccess={handlePaymentSuccess}
+                  onPaymentError={handlePaymentError}
+                />
+              </div>
+            </div>
           </div>
         ) : (
           <div className="grid lg:grid-cols-3 gap-8">
@@ -167,20 +277,12 @@ const Cart = () => {
                 <button
                   type="button"
                   onClick={handleCheckout}
-                  disabled={isCheckingOut}
                   className="w-full h-14 rounded-xl font-semibold text-lg bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white transition-all duration-500 hover:scale-105 hover:shadow-xl"
                 >
-                  {isCheckingOut ? (
-                    <div className="flex items-center space-x-2">
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      <span>Processing...</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center space-x-2">
-                      <CreditCard className="w-5 h-5" />
-                      <span>Proceed to Checkout</span>
-                    </div>
-                  )}
+                  <div className="flex items-center space-x-2">
+                    <CreditCard className="w-5 h-5" />
+                    <span>Proceed to Checkout</span>
+                  </div>
                 </button>
 
                 <div className="mt-4 text-center">

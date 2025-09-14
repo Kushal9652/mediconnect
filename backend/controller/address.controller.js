@@ -3,7 +3,7 @@ const Address = require('../models/address.model');
 exports.createAddress = async (req, res) => {
   try {
     const { street, city, state, zip, phone } = req.body;
-    const userId = req.user.userId; // Correctly get userId from auth middleware
+    const userId = req.user.userId; 
     if (!userId || !street || !city || !state || !zip) {
       return res.status(400).json({ message: 'Street, city, state, and zip are required.' });
     }
